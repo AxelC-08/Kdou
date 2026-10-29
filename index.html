@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="image/logo_sf.png" type="image/x-icon">
+    <title>SAE BD Kdou</title>
+</head>
+<body>
+    <main class="layout">
+        <aside class="sidebar">
+            <div class="image-centree">
+                <img src="image/logo_sf.png" alt="Logo de l'entreprise" width="50%" height="auto">
+            </div>
+
+            <nav aria-label="Navigation principale">
+                <ul>
+                    <li><a href="#"><span>⌂</span> Tableau de bord</a></li>
+                    <li><a href="#"><span>♙</span> Clients</a></li>
+                    <li><a href="#"><span>▣</span> Produits</a></li>
+                    <li><a href="#"><span>▧</span> Ventes</a></li>
+                    <li><a href="#"><span>⚙</span> Fournisseurs</a></li>
+                    <li><a href="page_explication.html"><span>🔈</span> Explication</a></li>
+                    <li><a class="active deroule" href="index.html"><span>▤</span> Requêtes SQL ▼</a>
+                        <ul class="sous">
+                            <li><a href="#re1">Requet 1</a></li>
+                            <li><a href="#re2">Requet 2</a></li>
+                            <li><a href="#re3">Requet 3</a></li>
+                            <li><a href="#re4">Requet 4</a></li>
+                            <li><a href="#re5">Requet 5</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <div class="container">
+            <input type="radio" name="tabs" id="tab-signin" checked>
+            <input type="radio" name="tabs" id="tab-signup">
+
+            <div class="tab-navigation">
+                <label for="tab-signin" class="tab-label">Requête SQL</label>
+                <label for="tab-signup" class="tab-label">Résultats</label>
+            </div>
+
+            <div class="tab-content">
+                <div class="tab-pane" id="signin">
+                <h2>Requête SQL</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Requête</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="re1">
+<td><code class="code"><span class="bl">SELECT</span>
+    Pays.Capitale,
+    Clientele.Societe
+<span class="bl">FROM</span>
+    Pays
+    <span class="bl">INNER JOIN</span> Cliente <span class="bl">ON</span> Pays.NoPays = Clientele.NoPays
+<span class="bl">WHERE</span>
+    Pays.Capitale = <span class="str">"Paris"</span>;</code></td>
+                        <td>On veut vérifier les coordonnées des clients parisiens : liste triée par société.</td>
+                        </tr>
+                        <tr>
+<td><code class="code"><span class="bl">SELECT</span>
+    Pays.PaysEN,
+    Fournisseur.Societe,
+    Fournisseur.Ville,
+    Produit.NomProd,
+    Produit.CountAchat
+<span class="bl">FROM</span>
+    Pays
+    <span class="bl">INNER JOIN (</span> 
+        Fournisseur 
+        <span class="bl">INNER JOIN</span> Produits <span class="bl">ON</span> Fournisseur.NoFour = Produits.NoFour
+    ) <span class="bl">ON</span> Pays.NoPays = Fournisseur.NoPays
+<span class="bl">WHERE</span>
+        (Pays.PaysEN = <span class="str">"United States")</span>
+        <span class="bl">AND</span> (Produit.CoutAchat < <span class="gr">25</span>);</code></td>
+                        <td>Quels sont les produits de provenance des Etats-Unis avec un cout de moins de 25€ ? On veut les connaître noms et prix, nom du fournisseur et ville.</td>
+                        </tr>
+                        <tr>
+<td><code class="code"><span class="bl">SELECT</span>
+    Categorie.NomCateg,
+    Produit.CoutAchat,
+    Fournisseur.Societe,
+    Pays.PaysFR
+<span class="bl">FROM</span> (
+    Pays
+    <span class="bl">INNER JOIN (</span> 
+        Fournisseur 
+            <span class="bl">INNER JOIN</span> 
+                Categorie 
+                <span class="bl">INNER JOIN</span> Produit <span class="bl">ON</span> Categorie.CodeCateg = Produit.CodeCateg
+            <span class="bl">) ON</span> Fournisseur.NoFour = Produit.NoFour
+        <span class="bl">) ON</span> Pays.NoPays = Fournisseur.NoPays
+<span class="bl">WHERE</span>
+        (
+            (Categorie.NomCateg = <span class="str">"Viandes"</span>)
+            <span class="bl">OR </span> (Categorie.NomCateg <span class="bl">LIKE</span> <span class="str">"Poissons</span>)
+        )
+        <span class="bl">AND</span> Produit.CoutAchat > <span class="gr">50</span>;</code></td>
+                        <td>Quels sont les produits (avec fournisseur et pays de provenance) de catégorie viandes ou poissons ayant un coût d’achat de plus de 50€ ?</td>
+                        </tr>
+                        <tr>
+<td><code class="code"><span class="bl">SELECT</span>
+    Fournisseur.Societe, Produit.NomProd, Categorie.NomCateg
+<span class="bl">FROM</span>
+    Fournisseur
+    <span class="bl">INNER JOIN ( </span> 
+        Categorie 
+            <span class="bl">INNER JOIN</span> Produit <span class="bl">ON</span> Categorie.CodeCateg = Produit.Categ
+        <span class="bl">) ON</span> Fournisseur.NoFour = Produit.NoFour
+<span class="bl">WHERE</span>
+    (Categorie.NomCateg) = <span class="str">"Viandes"</span>
+    <span class="bl">OR</span> (Categorie.NomCateg <span class="bl">LIKE</span> <span class="str">"Poissons*"</span>);</code></td>
+                        <td>Quels fournisseurs proposent de la viande ou du poisson ?</td>
+                        </tr>
+                        <tr>
+<td><code class="code"><span class="bl">SELECT</span>
+    Fournisseur.Societe, Produit.NomProd, Categorie.NomCateg
+<span class="bl">FROM</span>
+    Fournisseur
+    <span class="bl">INNER JOIN (</span>
+        Categorie
+        <span class="bl">INNER JOIN</span> Produit <span class="bl">ON</span> Categorie.CodeCateg = Produit.CodeCateg 
+    <span class="bl">) ON</span> Fournisseur.NoFour = Produit.NoFour
+<span class="bl">WHERE</span>
+    (Categorie.NomCateg = <span class="str">"Viande"</span>)
+    <span class="bl">AND</span> (Categorie.NomCateg <span class="bl">LIKE</span> <span class="str">"Poissons*"</span>);</code></td>
+                        <td>Quels fournisseurs proposent de la viande et du poisson ?</td>
+                        </tr>
+                        <tr>
+<td><code class="code"><span class="bl">SELECT</span>
+    Produit.SteParUnit, Produit.NomProd
+<span class="bl">FROM</span> 
+    Produit
+<span class="bl">WHERE</span>
+    (Produit.QteParUnit <span class="bl">LIKE</span> <span class="str">"*cartons"</span>)
+    <span class="bl">OR</span> (Produit.QteParUnit <span class="bl">LIKE</span> <span class="str">"*verres"</span>);</code></td>
+                        <td>Quels sont les produits conditionnés dans du carton ou dans du verre ?</td>
+                        </tr>
+                        <tr>
+<td><code class="code"><span class="bl">SELECT</span>
+    <span class="bl">TOP</span> <span class="gr">3</span> Clientele.Contact, Commande.CodeCli, Commande.DateCde
+<span class="bl">FROM</span> 
+    Clientele
+    <span class="bl">INNER JOIN</span> Commande <span class="bl">ON</span> Clientele.CodeCli = Commande.CodeCli
+<span class="bl">WHERE</span>
+    Clientele.Contact = <span class="str">"Max Deschamps"</span>;</code></td>
+                        <td>Donner les 3 dernières commandes du client Max Deschamps ?</td>
+                        </tr>
+                        <tr>
+<td><code class="code"><span class="bl">SELECT</span> F.NoFour, F.NomFour
+<span class="bl">FROM</span> (
+    Fournisseur <span class="bl">AS</span> F
+    <span class="bl">INNER JOIN</span> Produit <span class="bl">AS</span> P <span class="bl">ON</span> F.NoFour = P.NoFour
+    )
+    <span class="bl">INNER JOIN</span> Categorie <span class="bl">AS</span> C <span class="bl">ON</span> P.CodeCat = C.CodeCat
+<span class="bl">GROUP BY</span> F.NoFour, F.NomFour
+<span class="bl">HAVING</span> <span class="fn">Sum</span>(IIf(C.NomCat <> <span class="str">"Desserts"</span>, <span class="gr">1</span>, <span class="gr">0</span>)) = <span class="gr">0</span>;</code></td>
+                        <td>Quels fournisseurs ne proposent que des desserts ?</td>
+                        </tr>
+                        <tr>
+<td><code class="code"><span class="bl">SELECT</span> F.NoFour, F.NomFour, F.Pays
+<span class="bl">FROM</span> Fournisseur <span class="bl">AS</span> F
+<span class="bl">LEFT JOIN</span> Produit <span class="bl">AS</span> P <span class="bl">ON</span> F.NoFour = P.NoFour
+<span class="bl">INNER JOIN</span> DetailCommande <span class="bl">ON</span> Produit.RefProd = DetailCommande.[Réf produit]
+<span class="bl">WHERE</span>
+    (F.Pays <> <span class="str">"France"</span>)
+    <span class="bl">AND</span> P.NoFour Is Null;</code></td>
+                        <td>Quels fournisseurs hors France n’ont pas encore de produits au catalogue de Kdou ?</td>
+                        </tr>
+                        <tr>
+<td><code class="code">
+<span class="bl">SELECT</span> C1.NoClient <span class="bl">AS</span> Client1, C1.NomClient <span class="bl">AS</span> NomClient1, C2.NoClient <span class="bl">AS</span> Client2, C2.NomClient <span class="bl">AS</span> NomClient2
+<span class="bl">FROM</span> Client AS C1, Client AS C2
+<span class="bl">INNER JOIN</span> DetailCommande <span class="bl">ON</span> Produit.RefProd = DetailCommande.[Réf produit]
+<span class="bl">WHERE</span>
+    C1.Ville = <span class="str">"Paris"</span>
+    AND C2.Ville = <span class="str">"Paris"</span>
+    AND C1.NoClient < C2.NoClient;</code></td>
+                        <td>Pour optimiser les livraisons, on veut savoir quels couples de clients sont situés à Paris.</td>
+                        </tr>
+                        <tr id="re2">
+<td><code class="code"><span class="bl">SELECT</span>
+    <span class="fn">Sum</span>([Quantité] * [CoutAchat]) <span class="bl">AS</span> CATotal
+<span class="bl">FROM</span> (
+    (
+    Pays
+    <span class="bl">INNER JOIN</span> Fournisseur <span class="bl">ON</span> Pays.NoPays = Fournisseur.NoPays
+    )
+    <span class="bl">INNER JOIN</span> Produits <span class="bl">ON</span> Fournisseur.NoFour = Produits.NoFour
+)
+<span class="bl">INNER JOIN</span> DetailCommande <span class="bl">ON</span> Produit.RefProd = DetailCommande.[Réf produit]
+<span class="bl">WHERE</span>
+    Pays.UE = <span class="str">"Membre"</span>;</code>
+                        <td>Dans une réflexion en lien avec l’origine de ses produits : On veut comme indicateur le CA total généré à ce jour avec les fournisseurs de l’UE ? de la requête 2</td>
+                        </tr>
+                        <tr id="re3">
+<td><code class="code"><span class="bl">SELECT</span>
+    <span class="fn">Sum</span>(
+        [Quantité] * [CoutAchat] * (<span class="gr">1</span> - [DetailCommande].[Remise (%)])
+    ) <span class="bl">AS</span> CATotal,
+    Commande.DateCde
+<span class="bl">FROM</span> 
+    Commande
+    <span class="bl">INNER JOIN</span> (
+        Categorie
+        <span class="bl">INNER JOIN</span>(
+            Produit
+            <span class="bl">INNER JOIN</span> DetailCommande <span class="bl">ON</span> Produit.RefProd = DetailCommande.[Réf produit]
+        ) <span class="bl">ON</span> Categorie.CodeCateg = Produit.CodeCateg
+    ) <span class="bl">ON</span> Commande.[N° commande] = DetailCommande.[N° commande]
+<span class="bl">WHERE</span>
+    (
+        (
+            (Categorie.NomCateg) = "Desserts"
+            <span class="bl">OR</span> (Categorie.NomCateg) = "Boissons"
+        )
+    )
+<span class="bl">GROUP BY</span> 
+    Commande.DateCde;</code></td>
+                            <td>Dans une réflexion en lien avec la santé : On veut comme indicateur le chiffre d’affaire généré (montant total des ventes) annuel pour les catégories desserts ou boissons.</td>
+                        </tr>
+                        <tr id="re4">
+<td><code class="code"><span class="bl">SELECT</span>
+    <span class="fn">Count</span>(Produit.RefProd) <span class="bl">AS</span> CompteDeRefProd
+<span class="bl">FROM</span> 
+    (
+        Categorie
+        <span class="bl">INNER JOIN</span> Produit <span class="bl">ON</span> Categorie.CodeCateg = Produit.CodeCateg
+    )
+    <span class="bl">LEFT JOIN</span> DetailCommande <span class="bl">ON</span> Produit.RefProd = DetailCommande.[Réf produit]
+<span class="bl">WHERE</span>
+    Categorie.NomCateg = "Vivandes"
+<span class="bl">HAVING</span>
+    <span class="fn">Count</span> (DetailCommande.[N° commande]) <span class="bl">IS</span> NULL;</code></td>
+                            <td>Dans une réflexion en lien avec l’offre commerciale : Calcul de l’indicateur nombre de produits carnés non commandés actuellement ?</td>
+                        </tr>
+                        <tr id="re5">
+<td><code class="code"><span class="bl">SELECT</span>
+    Clientele.CodeCli,
+    <span class="fn">Count</span>(Commande.[N° commande]) <span class="bl">AS</span> [CompteDeN° commande]
+<span class="bl">FROM</span> 
+        Clientele
+        <span class="bl">INNER JOIN</span> Commande <span class="bl">ON</span> Categorie.CodeCateg = Produit.CodeCateg
+    <span class="bl">LEFT JOIN</span> DetailCommande <span class="bl">ON</span> Produit.RefProd = DetailCommande.[Réf produit]
+<span class="bl">WHERE</span>
+    Categorie.NomCateg = "Vivandes"
+<span class="bl">HAVING</span>
+    <span class="fn">Count</span> (DetailCommande.[N° commande]) <span class="bl">IS</span> NULL;</code></td>
+                            <td>Dans une réflexion sur le partenariat client : A-t-on des clients pilotes d’un réseau partenaire ayant autant de commandes que les clients partenaires ?</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                <div class="tab-pane" id="signup">
+                    <h2>Résultats</h2>
+                    <p>Les résultats des requêtes SQL seront affichés ici.</p>
+                    <ul class="result-list">
+                        <li class="result-list2">✅ Validé</li>
+                        <li class="result-list2">✅ Validé</li>
+                        <li class="result-list2">✅ Validé</li>
+                        <li class="result-list2">✅ Validé</li>
+                        <li class="result-list2">✅ Validé</li>
+                        <li class="result-list2">✅ Validé</li>
+                        <li class="result-list2">✅ Validé</li>
+                        <li class="result-list2">✅ Validé</li>
+                        <li class="result-list2">✅ Validé</li>
+                        <li class="result-list2">✅ Validé</li>
+                        <li class="result-list2">✅ Validé</li>
+                        <li class="result-list2">✅ Validé</li>
+                        <li class="result-list2">✅ Validé</li>
+                        <li class="result-list2">✅ Validé</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+        
+    </main>
+    <footer>
+        <p>Texte à remplir et générer des sources qui aurais pus m'aider à trouver les codes dur.</p>
+        <h3>Accésibilité:</h3>
+        <p>Utilisation de l'extention firefox WAVE</p><br>
+        <h3>Liens pages:</h3>
+        <ul>
+            <li><a href="#"><span>⌂</span> Tableau de bord</a></li>
+            <li><a href="#"><span>♙</span> Clients</a></li>
+            <li><a href="#"><span>▣</span> Produits</a></li>
+            <li><a href="#"><span>▧</span> Ventes</a></li>
+            <li><a href="#"><span>⚙</span> Fournisseurs</a></li>
+            <li><a href="page_explication.html"><span>🔈</span> Explication</a></li>
+            <li><a href="index.html"><span>▤</span> Requêtes SQL ▼</a>
+                <ul class="sous">
+                    <li><a href="#">Requet 1</a></li>
+                    <li><a href="#">Requet 2</a></li>
+                    <li><a href="#">Requet 3</a></li>
+                    <li><a href="#">Requet 4</a></li>
+                    <li><a href="#">Requet 5</a></li>
+                </ul>
+            </li>
+        </ul>
+    </footer>
+</body>
+</html>
